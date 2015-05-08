@@ -4,7 +4,13 @@ MAINTAINER Nelson <nazareth{DOT}nelson{AT}gmail.com>
 #Install subversion to download OSQA
 RUN apt-get install subversion -y
 
+#Download OSQA source
+RUN svn co http://svn.osqa.net/svnroot/osqa/trunk/ /home/osqa/osqa-server
+## list to verify
+RUN ls -l /home/osqa/osqa-server
 
+#Install Apache webserver.
+RUN apt-get install apache2 libapache2-mod-wsgi -y
 
 ####################################
 # Useful for debug purposes.
