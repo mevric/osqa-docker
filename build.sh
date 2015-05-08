@@ -1,0 +1,1 @@
+sudo docker build --tag="mevric:osqa-docker" --no-cache="true" --rm=true osqa-docker
