@@ -19,18 +19,18 @@ WSGISocketPrefix ${APACHE_RUN_DIR}
 	#otherwise django will be crunching images through itself wasting time
 	Alias /m/ "/home/osqa/osqa-server/forum/skins/"
         <Directory "/home/osqa/osqa-server/forum/skins">
-                Order allow,deny
-                Allow from all
+			Require all granted
         </Directory>
 	Alias /upfiles/ "/home/osqa/osqa-server/forum/upfiles/"
 	<Directory "/home/osqa/osqa-server/forum/upfiles">
-		Order deny,allow
-		Allow from all
+		Require all granted
 	</Directory>
 
 	#this is your wsgi script described in the prev section
 	WSGIScriptAlias / /home/osqa/osqa-server/osqa.wsgi
-
+	<Directory "/home/osqa/osqa-server">
+		Require all granted
+	</Directory>
 	CustomLog ${APACHE_LOG_DIR}/osqa.access.log common
 	ErrorLog ${APACHE_LOG_DIR}/osqa.error.log
 </VirtualHost>

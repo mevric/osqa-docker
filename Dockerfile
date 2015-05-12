@@ -22,7 +22,7 @@ RUN rm /etc/apache2/sites-enabled/000-default*
 RUN ls -l /etc/apache2/sites-available/
 
 ADD osqa /etc/apache2/sites-available/osqa
-RUN ln -s /etc/apache2/sites-available/osqa /etc/apache2/sites-enabled/osqa
+RUN ln -s /etc/apache2/sites-available/osqa /etc/apache2/sites-enabled/osqa.conf
 
 EXPOSE 80
 ########################################################################
