@@ -4,20 +4,59 @@ MAINTAINER Nelson <nazareth{DOT}nelson{AT}gmail.com>
 #Install subversion to download OSQA
 RUN apt-get install subversion -y
 
+########################################################################
 #Download OSQA source
 RUN svn co http://svn.osqa.net/svnroot/osqa/trunk/ /home/osqa/osqa-server
-## DEBUG : list to verify
-RUN ls -l /home/osqa/osqa-server
+########################################################################
 
+########################################################################
 #Install Apache webserver.
 RUN apt-get install apache2 libapache2-mod-wsgi -y
+ADD osqa.wsgi /home/osqa/osqa-server/osqa.wsgi
 
+RUN ls -l /etc/apache2/
+RUN ls -l /etc/apache2/sites-available/
+#RUN rm /etc/apache2/sites-available/default
+RUN rm /etc/apache2/sites-available/default-ssl*
+RUN rm /etc/apache2/sites-enabled/000-default*
+RUN ls -l /etc/apache2/sites-available/
 
+ADD osqa /etc/apache2/sites-available/osqa
+RUN ln -s /etc/apache2/sites-available/osqa /etc/apache2/sites-enabled/osqa
+
+EXPOSE 80
+########################################################################
+
+########################################################################
+# Install python support library
+# new versions of ubuntu usuall have python installed. Hence not attempting to install.
+RUN apt-get update
+RUN apt-get install python-setuptools -y
+RUN easy_install South django django-debug-toolbar markdown html5lib python-openid
+RUN apt-get install python-pip -y
+RUN apt-get install python-mysqldb -y
+RUN pip install Django==1.3
+RUN pip install Markdown==2.4.1
+
+# local version of settings_local.py has been updated with MySQL config and APP_URL
+ADD settings_local.py /home/osqa/osqa-server/settings_local.py
+
+RUN chmod -R g+w /home/osqa/osqa-server/forum/upfiles
+RUN chmod -R g+w /home/osqa/osqa-server/log
+
+########################################################################
+
+########################################################################
+# config MySQL client.
+RUN apt-get install mysql-client -y
+########################################################################
+	
 ########################################################################
 #need supervisor to run multiple services at startup
 RUN apt-get update
 RUN apt-get install -y supervisor
 ####### Add supervisord ############
+#RUN mkdir /var/log/supervisor/
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ####### start the services ############
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

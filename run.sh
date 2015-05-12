@@ -5,4 +5,5 @@
 # $5 MySQL password 
 # $6 osqa-docker image ID
 
-sudo docker run -d -p $1:49175:22 $2 $3 $4 $5 $6
+#sudo docker run -d -p $1:49175:22 $1:8080:80 $2 $3 $4 $5 $6
+sudo docker run -d -p $1:49175:22 $1:8080:80 $2
